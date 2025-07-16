@@ -1,17 +1,8 @@
 import streamlit as st
 import random
 import time
-from streamlit_lottie import st_lottie
 import requests
-
-# ---------- Load Lottie animation ----------
-def load_lottieurl(url):
-    r = requests.get(url)
-    if r.status_code != 200:
-        return None
-    return r.json()
-
-lottie_jar = load_lottieurl("https://lottie.host/f08fdded-7ce3-4072-b9ae-93db086f342e/LottieJar.json")  # replace with valid jar animation
+from datetime import date
 
 # ---------- Config ----------
 st.set_page_config(page_title="Jars of Happiness 💖", layout="centered")
@@ -55,9 +46,8 @@ st.markdown("""
 st.markdown("<div class='title'>🫙 Jars of Happiness 💖</div>", unsafe_allow_html=True)
 st.markdown("<div class='subtitle'>Klik toples ini untuk ambil 1 kebahagiaan hari ini ✨</div>", unsafe_allow_html=True)
 
-# ---------- Animation ----------
-if lottie_jar:
-    st_lottie(lottie_jar, height=250)
+# ---------- Animation GIF ----------
+st.image("https://media.giphy.com/media/f9k1tV7HyORcngKF8v/giphy.gif", use_column_width=True)
 
 # ---------- Session State ----------
 if "last_open" not in st.session_state:
@@ -78,8 +68,6 @@ pesan_kebahagiaan = [
 ]
 
 # ---------- Date check ----------
-from datetime import date
-
 hari_ini = str(date.today())
 
 # ---------- Button ----------
