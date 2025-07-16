@@ -1,76 +1,103 @@
 import streamlit as st
-import time
 import random
+import time
+from streamlit_lottie import st_lottie
+import requests
 
-st.set_page_config(page_title="💗 Tombol Darurat Kangen 💗", layout="centered")
+# ---------- Load Lottie animation ----------
+def load_lottieurl(url):
+    r = requests.get(url)
+    if r.status_code != 200:
+        return None
+    return r.json()
 
-# Custom CSS
+lottie_jar = load_lottieurl("https://lottie.host/f08fdded-7ce3-4072-b9ae-93db086f342e/LottieJar.json")  # replace with valid jar animation
+
+# ---------- Config ----------
+st.set_page_config(page_title="Jars of Happiness 💖", layout="centered")
+
+# ---------- Styling ----------
 st.markdown("""
     <style>
     body {
         background-color: #fff0f5;
     }
-    .big-button {
-        font-size: 30px !important;
-        padding: 20px 40px;
-        background-color: #ff69b4;
-        color: white;
-        border-radius: 15px;
-        border: none;
-        font-weight: bold;
-        box-shadow: 2px 2px 10px pink;
+    .title {
         text-align: center;
-        width: 100%;
+        font-size: 40px;
+        color: #ff69b4;
+        font-weight: bold;
     }
-    .love-blink {
-        animation: blink 0.8s infinite;
+    .subtitle {
+        text-align: center;
+        font-size: 20px;
+        color: #db7093;
     }
-    @keyframes blink {
-        0%   { color: #ff69b4; }
-        50%  { color: #ff1493; }
-        100% { color: #ff69b4; }
+    .message-box {
+        background-color: #ffe4e1;
+        padding: 20px;
+        border-radius: 15px;
+        text-align: center;
+        font-size: 20px;
+        color: #c71585;
+        box-shadow: 2px 2px 10px pink;
+    }
+    .blink {
+        animation: blinker 1s linear infinite;
+    }
+    @keyframes blinker {
+        50% { opacity: 0.3; }
     }
     </style>
 """, unsafe_allow_html=True)
 
-# Judul
-st.markdown("""
-    <h1 style='text-align: center; color: #ff1493;'>💖 Tombol Darurat Kangen 💖</h1>
-    <p style='text-align: center; font-size: 22px;'>Kalau kamu pencet ini, kamu 100% bucin 😆</p>
-""", unsafe_allow_html=True)
+# ---------- Header ----------
+st.markdown("<div class='title'>🫙 Jars of Happiness 💖</div>", unsafe_allow_html=True)
+st.markdown("<div class='subtitle'>Klik toples ini untuk ambil 1 kebahagiaan hari ini ✨</div>", unsafe_allow_html=True)
 
-# Kumpulan pesan bucin random
-pesan_kangen = [
-    "Aku juga kangen kamu banget 😭💕",
-    "Gimana sih caranya biar bisa peluk kamu sekarang? 🥺",
-    "Duh, kenapa kamu gemes banget sih 😤❤️",
-    "Level kangen kamu: NGGAK TERBATAS 💘",
-    "Kangennya sampe bikin kupu-kupu di perut demo 🙈",
-    "Nih peluk 100x buat kamu 🤗🤗🤗🤗🤗",
+# ---------- Animation ----------
+if lottie_jar:
+    st_lottie(lottie_jar, height=250)
+
+# ---------- Session State ----------
+if "last_open" not in st.session_state:
+    st.session_state.last_open = ""
+
+# ---------- Messages ----------
+pesan_kebahagiaan = [
+    "Kamu adalah alasan kenapa aku senyum hari ini 😘",
+    "Hari ini mungkin berat, tapi kamu lebih kuat 💪",
+    "Senyummu lebih manis dari boba milk tea 💗",
+    "Kalau dunia jahat, sini aku peluk 🤗",
+    "Kamu tuh kayak sinyal WiFi — bikin hidup nyambung 🌐",
+    "Ingat, kamu dicintai lebih dari yang kamu kira 💞",
+    "Kamu layak bahagia, bahkan di hari yang biasa 💐",
+    "Pakai ini buat recharge semangatmu ya 🔋",
+    "Aku bangga sama kamu hari ini ✨",
+    "Semoga ini bikin kamu senyum sedikit aja 😊",
 ]
 
-# Tombol besar
-if st.button("😭 AKU KANGEN BANGET 😭", key="kangen_button"):
-    # Efek animasi teks "BOOM!"
-    for i in range(3):
-        st.markdown("<h2 class='love-blink' style='text-align: center;'>💥 BOOM! 💥</h2>", unsafe_allow_html=True)
-        time.sleep(0.3)
+# ---------- Date check ----------
+from datetime import date
 
-    # Tampilkan pesan kangen lucu
-    st.markdown(f"<h3 style='text-align: center; color: #d63384;'>{random.choice(pesan_kangen)}</h3>", unsafe_allow_html=True)
+hari_ini = str(date.today())
 
-    # Peluk digital
-    st.image("https://media.tenor.com/MlXNjHFiHhcAAAAC/hug-cute.gif", caption="Peluk dari aku 🥹", use_column_width=True)
+# ---------- Button ----------
+st.markdown("\n")
+if st.button("🎁 Ambil Catatan Hari Ini", use_container_width=True):
+    if st.session_state.last_open != hari_ini:
+        with st.spinner("Lagi buka jar kamu... 🎀"):
+            time.sleep(2)
+        pesan = random.choice(pesan_kebahagiaan)
+        st.session_state.last_open = hari_ini
+        st.markdown(f"<div class='message-box blink'>💌 {pesan}</div>", unsafe_allow_html=True)
+    else:
+        st.warning("Udah dibuka hari ini yaa 😗\nBesok balik lagi yaa~ 💖")
 
-else:
-    # Tampilan awal: gif nungguin
-    st.image("https://media.tenor.com/3FvgsDG02xoAAAAi/bubu-dudu.gif", width=200)
-    st.markdown("<p style='text-align: center; font-size: 18px;'>Lagi nunggu peluk dari kamu nih... 😗</p>", unsafe_allow_html=True)
-
-# Catatan manis di bawah
+# ---------- Footer ----------
 st.markdown("""
-    <p style='text-align: center; color: gray; font-size: 14px;'>
-    Buka ini kapan pun kamu pengen peluk virtual dari aku. <br> 
-    Dijamin no drama, cuma cinta. 🧸✨
+    <hr>
+    <p style='text-align: center; font-size: 14px; color: gray;'>
+    Aplikasi ini adalah hadiah kecil, dari aku yang (masih) cinta kamu 💝
     </p>
 """, unsafe_allow_html=True)
