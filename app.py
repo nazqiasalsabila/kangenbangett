@@ -1,91 +1,69 @@
 import streamlit as st
-import random
-import time
-import requests
-from datetime import date
 
-# ---------- Config ----------
-st.set_page_config(page_title="Jars of Happiness 💖", layout="centered")
+st.set_page_config(page_title="Tes Cinta Lucu 💘", layout="centered")
 
-# ---------- Styling ----------
 st.markdown("""
-    <style>
-    body {
-        background-color: #fff0f5;
-    }
-    .title {
-        text-align: center;
-        font-size: 40px;
-        color: #ff69b4;
-        font-weight: bold;
-    }
-    .subtitle {
-        text-align: center;
-        font-size: 20px;
-        color: #db7093;
-    }
-    .message-box {
-        background-color: #ffe4e1;
-        padding: 20px;
-        border-radius: 15px;
-        text-align: center;
-        font-size: 20px;
-        color: #c71585;
-        box-shadow: 2px 2px 10px pink;
-    }
-    .blink {
-        animation: blinker 1s linear infinite;
-    }
-    @keyframes blinker {
-        50% { opacity: 0.3; }
-    }
-    </style>
+    <div style='text-align: center;'>
+        <img src='https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif' width='200'>
+        <h1 style='color: #ff4b91; font-size: 42px;'>💘 Jelita ❤️ Madut 💘</h1>
+        <p style='font-size:20px; color: #ff66a3;'>Tes Cinta Lucu & Receh</p>
+        <p style='font-size:18px; color: #555;'>Cocokin jawaban kamu sama pasanganmu dan lihat seberapa cocok kalian 😝</p>
+    </div>
 """, unsafe_allow_html=True)
 
-# ---------- Header ----------
-st.markdown("<div class='title'>🫙 Jars of Happiness 💖</div>", unsafe_allow_html=True)
-st.markdown("<div class='subtitle'>Klik toples ini untuk ambil 1 kebahagiaan hari ini ✨</div>", unsafe_allow_html=True)
-
-# ---------- Animation GIF ----------
-st.image("https://media.giphy.com/media/f9k1tV7HyORcngKF8v/giphy.gif", use_container_width=True)
-
-# ---------- Session State ----------
-if "last_open" not in st.session_state:
-    st.session_state.last_open = ""
-
-# ---------- Messages ----------
-pesan_kebahagiaan = [
-    "Kamu adalah alasan kenapa aku senyum hari ini 😘",
-    "Hari ini mungkin berat, tapi kamu lebih kuat 💪",
-    "Senyummu lebih manis dari boba milk tea 💗",
-    "Kalau dunia jahat, sini aku peluk 🤗",
-    "Kamu tuh kayak sinyal WiFi — bikin hidup nyambung 🌐",
-    "Ingat, kamu dicintai lebih dari yang kamu kira 💞",
-    "Kamu layak bahagia, bahkan di hari yang biasa 💐",
-    "Pakai ini buat recharge semangatmu ya 🔋",
-    "Aku bangga sama kamu hari ini ✨",
-    "Semoga ini bikin kamu senyum sedikit aja 😊",
+pertanyaan = [
+    ("1. Kalau aku tiba-tiba nangis, kamu bakal...", ["A. Panik dan ikut nangis", "B. Langsung peluk", "C. Nanya dulu, tapi tetep bingung"]),
+    ("2. Pilihan kencan paling seru menurut kamu:", ["A. Nonton film/ main game", "B. Ngobrol ngobrol di cafe", "C. Keliling keliling naik motor"]),
+    ("3. Kalau aku bales chat cuma 'Hmm.', kamu akan...", ["A. iya", "B. Bales: 'Oke.'", "C. Kirim stiker nyindir"]),
+    ("4. Kalau lagi LDR, hal yang paling kamu butuhin adalah...", ["A. Video call tiap malam", "B. kirim pap tiap waktu", "C. long teks romantis"]),
+    ("5. Kamu tuh tipe pasangan yang...", ["A. Gampang baper", "B. cuek tapi sayang", "C. Santai tapi tiba-tiba manja"]),
+    ("6. Kalau kita berantem, kamu bakal...", ["A. Minta maaf duluan walau gak salah", "B. Ngilang dulu biar adem", "C. Kirim meme kucing buat baikan"]),
+    ("7. Kebiasaan kamu yang paling ngeselin tapi aku kangenin:", ["A. Lupa bales padahal udah baca", "B. Ngasih kode tapi gak mau jujur langsung", "C. Tiba-tiba ngambek terus peluk"]),
+    ("8. Kalau disuruh milih panggilan sayang:", ["A. Bubup", "B. Sayang", "C. Nama makanan lucu (e.g. Bakso, Cimol)"]),
+    ("9. Kalau kita jadi karakter kartun, kamu bakal jadi...", ["A. Spongebob: rame dan niat", "B. Shinchan: nakal tapi gemes", "C. Nobita: lemot tapi setia"]),
+    ("10. Kalau aku ketiduran pas lagi video call...", ["A. Langsung screenshot wajah kamu yang konyol", "B. Bilang besoknya: 'Kamu ngorok tau semalem'", "C. Liatin kamu tidur"]),
 ]
 
-# ---------- Date check ----------
-hari_ini = str(date.today())
+st.subheader("🔐 Masukkan Jawaban Kunci (Pasanganmu)")
+kunci_jawaban = []
+with st.form("input_kunci"):
+    for i, (tanya, opsi) in enumerate(pertanyaan):
+        pilihan = st.radio(f"{tanya} (Jawaban Pasangan)", opsi, key=f"kunci{i}")
+        kunci_jawaban.append(pilihan)
+    simpan_kunci = st.form_submit_button("✅ Simpan Jawaban Kunci")
 
-# ---------- Button ----------
-st.markdown("\n")
-if st.button("🎁 Ambil Catatan Hari Ini", use_container_width=True):
-    if st.session_state.last_open != hari_ini:
-        with st.spinner("Lagi buka jar kamu... 🎀"):
-            time.sleep(2)
-        pesan = random.choice(pesan_kebahagiaan)
-        st.session_state.last_open = hari_ini
-        st.markdown(f"<div class='message-box blink'>💌 {pesan}</div>", unsafe_allow_html=True)
-    else:
-        st.warning("Udah dibuka hari ini yaa 😗\nBesok balik lagi yaa~ 💖")
+if simpan_kunci:
+    st.success("Jawaban kunci disimpan! Sekarang isi jawaban kamu dan lihat kecocokannya.")
 
-# ---------- Footer ----------
+    st.subheader("📝 Isi Jawaban Kamu")
+    jawaban_kamu = []
+    cocok = 0
+    with st.form("isi_jawaban"):  
+        for i, (tanya, opsi) in enumerate(pertanyaan):
+            pilihan = st.radio(f"{tanya} (Jawaban Kamu)", opsi, key=f"jawab{i}")
+            jawaban_kamu.append(pilihan)
+        submit_jawaban = st.form_submit_button("❤️ Lihat Kecocokan")
+
+    if submit_jawaban:
+        for j1, j2 in zip(kunci_jawaban, jawaban_kamu):
+            if j1 == j2:
+                cocok += 1
+
+        persen = cocok / len(pertanyaan) * 100
+        st.subheader("🎯 Hasil Kecocokan Kamu")
+        st.write(f"Jawaban yang sama: **{cocok} dari {len(pertanyaan)}** pertanyaan")
+        st.write(f"Persentase kecocokan: **{persen:.0f}%**")
+
+        if persen == 100:
+            st.success("🥰 Kalian kayak kembar pikiran! Langsung aja deh jadi couple goals 💘")
+        elif persen >= 70:
+            st.info("😍 Cocok banget! Tinggal atur jadwal kencan selanjutnya")
+        elif persen >= 50:
+            st.warning("🤔 Lumayan cocok, masih bisa diselaraskan lewat obrolan dan pelukan")
+        else:
+            st.error("😅 Beda frekuensi sih, tapi siapa tahu saling melengkapi?")
+
 st.markdown("""
-    <hr>
-    <p style='text-align: center; font-size: 14px; color: gray;'>
-    Aplikasi ini adalah hadiah kecil, dari aku yang (masih) cinta kamu 💝
-    </p>
+---
+<p style='text-align: center; color: gray;'>Game ini buat seru-seruan dan ngetes chemistry bareng pasangan 💞</p>
 """, unsafe_allow_html=True)
