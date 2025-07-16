@@ -47,7 +47,7 @@ st.markdown("<div class='title'>🫙 Jars of Happiness 💖</div>", unsafe_allow
 st.markdown("<div class='subtitle'>Klik toples ini untuk ambil 1 kebahagiaan hari ini ✨</div>", unsafe_allow_html=True)
 
 # ---------- Animation GIF ----------
-st.image("https://media.giphy.com/media/f9k1tV7HyORcngKF8v/giphy.gif", use_column_width=True)
+st.image("https://media.giphy.com/media/f9k1tV7HyORcngKF8v/giphy.gif", use_container_width=True)
 
 # ---------- Session State ----------
 if "last_open" not in st.session_state:
